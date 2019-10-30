@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<title>MCAT</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, height=device-hei">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<style>
+textarea {
+  overflow: auto;
+}
+#Output {
+  display: none;
+}
+</style>
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+<script>
+  $(function(){
+   $("input".submit(calc));
+  })
+
+  function calc({
+    var zipCode = Number($("#zipCode").val());
+    var rawText = String($("#textBox").val());
+  })
+</script>
+<body class="w3-content" style="max-width:1300px">
+
+<div class="w3-row">
+  <div class="w3-half w3-black w3-container w3-center" style="height:700px">
+    <div class="w3-padding-64">
+      <h1>MCAT</h1>
+    </div>
+    <div class="w3-padding-64">
+      <form id="input">
+        <input type="number" id="zipCode" placeholder="Zip Code" width="30">
+        <p> </p>
+        <br>
+        <textarea id="textBox" rows="4" cols="30" placeholder="Paste the Ingredient List Here"></textarea>
+        <p> </p>
+        <br>
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  </div>
+  <div class="w3-half w3-blue-grey w3-container" style="height:700px">
+    <div class="w3-padding-64 w3-center">
+      <h1>Your Recipe Price</h1>
+    </div>
+    <p id="Output"><span id="Cost">X</span></p>
+  </div>
+</div>
+
+
+</body>
+</html>
