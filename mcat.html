@@ -2,7 +2,6 @@
 <html>
 <title>MCAT</title>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, height=device-hei">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <style>
 textarea {
@@ -14,14 +13,59 @@ textarea {
 </style>
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 <script>
+  var list = [];
+  var CostList = [];
+  var zipCode = 0;
   $(function(){
-   $("input".submit(calc));
+   $("#form").submit(calc);
   })
 
-  function calc({
-    var zipCode = Number($("#zipCode").val());
+  function calc(){
+    console.log("Function called");
+    var test = "Yep, I'm a test";
+    zipCode = Number($("#zipCode").val());
+    $("#zipCode").html("");
     var rawText = String($("#textBox").val());
-  })
+    $("#textBox").html("Just a moment while your cost is calculated!");
+    do{
+      list[list.length] = rawText.substring(0, rawText.indexOf("\n"));
+      rawText = rawText.substring(rawText.indexOf('\n')+1);
+      if(rawText.indexOf('\n')==-1){
+        list[list.length] = rawText;
+        rawText = '';
+      }
+    }
+    while(rawText)
+    for (i=0; i<list.length; i++){
+      if(list[i] == '\n' || !(list[i])) list.splice(i, 1);
+    }
+    console.log("Done with the name calculations");
+    list.forEach(getNumber);
+  }
+
+  function getNumber(String){
+
+  }
+/* Here's the example recipe list
+1 large dried ancho chile
+
+2-3 Tbsp cumin seeds
+
+1 small onion
+
+1 jalapeno
+
+½ green bell pepper
+
+½ red bell pepper
+
+1 clove garlic
+
+1-2 Tbsp vegetable oil
+
+1 chipotle in adobo sauce (from can) 
+
+14 ounce can fire roasted crushed tomatoes*/
 </script>
 <body class="w3-content" style="max-width:1300px">
 
@@ -31,20 +75,31 @@ textarea {
       <h1>MCAT</h1>
     </div>
     <div class="w3-padding-64">
-      <form id="input">
         <input type="number" id="zipCode" placeholder="Zip Code" width="30">
         <p> </p>
         <br>
-        <textarea id="textBox" rows="4" cols="30" placeholder="Paste the Ingredient List Here"></textarea>
+        <textarea id="textBox" rows="4" cols="30" placeholder="Ingredient List separated by new lines"></textarea>
         <p> </p>
         <br>
-        <button type="submit">Submit</button>
-      </form>
+        <form id="form">
+          <button type="submit">Submit</button>
+        </form>
     </div>
   </div>
   <div class="w3-half w3-blue-grey w3-container" style="height:700px">
     <div class="w3-padding-64 w3-center">
       <h1>Your Recipe Price</h1>
+    </div>
+    <div>
+      <table style ="width:100%">
+        <tr>
+          <th>Item Name</th>
+          <th>Number</th>
+          <th>Unit Cost</th>
+          <th>Total Cost</th>
+        </tr>
+
+        </table>
     </div>
     <p id="Output"><span id="Cost">X</span></p>
   </div>
