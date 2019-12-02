@@ -41,10 +41,21 @@ textarea {
       if(list[i] == '\n' || isNaN(list[i].substring(0,list[i].indexOf(" ")))) list.splice(i, 1);
     }
     console.log("Done with the name calculations");
-    var fractionNumberBit;
-    for(i=0; i<list.length(), i++;){
+    var fractionNumberBit = "";
+    for(i=0; i<list.length, i++;){
+      firstBit = list[i].substring(0,list[i].indexOf(" "));
       fractionNumberBit = list[i].substring(list[i].indexOf(" ")+1, list[i].substring(list[i].indexOf(" ")+1).indexOf(" "));
-      numList[i] = list[i].substring(0,list[i].indexOf(" "));
+      
+      if(((firstBit === "½")||(firstBit === "⅓")||(firstBit === "⅔")||
+      (firstBit === "¼")||(firstBit === "¾")||(firstBit === "⅛")||
+      (firstBit === "⅜")||(firstBit === "⅝")||(firstBit === "⅞")||
+      (firstBit === "1/2")||(firstBit === "1/3")||(firstBit === "2/3")||
+      (firstBit === "1/4")||(firstBit === "3/4")||(firstBit === "1/8")||
+      (firstBit === "3/8")||(firstBit === "5/8")||(firstBit === "7/8"))){
+        numList[i] = vulgarFrac(list[i].substring(0,list[i].indexOf(" ")));
+        console.log("Here Lies Testing first IF");
+      }else numList[i] = list[i].substring(0, list[i].indexOf(" "));
+
       list[i] = list[i].substring(list[i].indexOf(" ")+1);
       if(((fractionNumberBit === "½")||(fractionNumberBit === "⅓")||(fractionNumberBit === "⅔")||
       (fractionNumberBit === "¼")||(fractionNumberBit === "¾")||(fractionNumberBit === "⅛")||
@@ -54,13 +65,15 @@ textarea {
       (fractionNumberBit === "3/8")||(fractionNumberBit === "5/8")||(fractionNumberBit === "7/8"))){
         numList[i] = numList[i] + vulgarFrac(fractionNumberBit);
         list[i] = list[i].substring(list[i].indexOf(" ")+1);
+        console.log("Here Lies Testing second IF");
       }
   console.log("Here Lies Testing");
   console.log("Stop Point");
   }
-
-  function vulgarFrac(str){
-    if(str === "½"){return(1/2)}
+}
+function vulgarFrac(str){
+  console.log("Here Lies Testing vulgar Method");
+  if(str === "½"){return(1/2)}
     else if(str === "⅓"){return(1/3)}
     else if(str === "⅔"){return(2/3)}
     else if(str === "¼"){return(1/4)}
@@ -69,9 +82,8 @@ textarea {
     else if(str === "⅜"){return(3/8)}
     else if(str === "⅝"){return(5/8)}
     else if(str === "⅞"){return(7/8)
-    }else return;
-  }
-
+  }else return;
+}
 /*((list[i].substring(0,1) === "½")||(list[i].substring(0,1) === "⅓")||(list[i].substring(0,1) === "⅔")||
 (list[i].substring(0,1) === "¼")||(list[i].substring(0,1) === "¾")||(list[i].substring(0,1) === "⅛")||
 (list[i].substring(0,1) === "⅜")||(list[i].substring(0,1) === "⅝")||(list[i].substring(0,1) === "⅞"))*/
