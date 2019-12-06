@@ -38,38 +38,32 @@ textarea {
     }
     while(rawText)
     for (i=0; i<list.length; i++){
-      if(list[i] == '\n' || isNaN(list[i].substring(0,list[i].indexOf(" ")))) list.splice(i, 1);
+      if(list[i] == '\n' || !(list[i])) list.splice(i, 1);
     }
     console.log("Done with the name calculations");
-    var fractionNumberBit = "";
-    for(i=0; i<list.length, i++;){
-      firstBit = list[i].substring(0,list[i].indexOf(" "));
-      fractionNumberBit = list[i].substring(list[i].indexOf(" ")+1, list[i].substring(list[i].indexOf(" ")+1).indexOf(" "));
-      
-      if(((firstBit === "½")||(firstBit === "⅓")||(firstBit === "⅔")||
-      (firstBit === "¼")||(firstBit === "¾")||(firstBit === "⅛")||
-      (firstBit === "⅜")||(firstBit === "⅝")||(firstBit === "⅞")||
-      (firstBit === "1/2")||(firstBit === "1/3")||(firstBit === "2/3")||
-      (firstBit === "1/4")||(firstBit === "3/4")||(firstBit === "1/8")||
-      (firstBit === "3/8")||(firstBit === "5/8")||(firstBit === "7/8"))){
-        numList[i] = vulgarFrac(list[i].substring(0,list[i].indexOf(" ")));
-        console.log("Here Lies Testing first IF");
-      }else numList[i] = list[i].substring(0, list[i].indexOf(" "));
-
-      list[i] = list[i].substring(list[i].indexOf(" ")+1);
-      if(((fractionNumberBit === "½")||(fractionNumberBit === "⅓")||(fractionNumberBit === "⅔")||
-      (fractionNumberBit === "¼")||(fractionNumberBit === "¾")||(fractionNumberBit === "⅛")||
-      (fractionNumberBit === "⅜")||(fractionNumberBit === "⅝")||(fractionNumberBit === "⅞")||
-      (fractionNumberBit === "1/2")||(fractionNumberBit === "1/3")||(fractionNumberBit === "2/3")||
-      (fractionNumberBit === "1/4")||(fractionNumberBit === "3/4")||(fractionNumberBit === "1/8")||
-      (fractionNumberBit === "3/8")||(fractionNumberBit === "5/8")||(fractionNumberBit === "7/8"))){
-        numList[i] = numList[i] + vulgarFrac(fractionNumberBit);
-        list[i] = list[i].substring(list[i].indexOf(" ")+1);
-        console.log("Here Lies Testing second IF");
+    for(v=0; v<list.length, v++;){
+      if(!isNan(list[v].substring(0, list[v].indexOf(" ")))){
+        list[v] = list[v].substring(list[v].indexOf(" ") + 1);
       }
-  console.log("Here Lies Testing");
-  console.log("Stop Point");
-  }
+      if(list[v].indexOf("/") != -1){
+        if(!isNan(list[v].substring(0,list[v].indexOf("/")))){
+          list[v] = list[v].substring(list[v].indexOf(" ") + 1);
+        }
+      }
+      if(list[v].indexOf("-") != -1){
+        if(!isNan(list[v].substring(0,list[v].indexOf("-")))){
+          list[v] = list[v].substring(list[v].indexOf(" ") + 1);
+        }
+      }
+      if(isFrac(list[v].substring(0, list[v].indexOf(" ")))){
+        list[v] = list[v].substring(list[v].indexOf(" ") + 1);
+      }
+      if(isMeasure(list[v].substring(0, list[v].indexOf(" ")))){
+        list[v] = list[v].substring(list[v].indexOf(" ") + 1);
+      }
+    }
+    console.log("List better be good now or I swear to JESUS CHRIST")
+console.log("Stop Point");
 }
 function vulgarFrac(str){
   console.log("Here Lies Testing vulgar Method");
@@ -83,6 +77,33 @@ function vulgarFrac(str){
     else if(str === "⅝"){return(5/8)}
     else if(str === "⅞"){return(7/8)
   }else return;
+}
+function isFrac(str){
+  if((str === "½")||(str === "⅓")||(str === "⅔")||
+      (str === "¼")||(str === "¾")||(str === "⅛")||
+      (str === "⅜")||(str === "⅝")||(str === "⅞")||
+      (str === "1/2")||(str === "1/3")||(str === "2/3")||
+      (str === "1/4")||(str === "3/4")||(str === "1/8")||
+      (str === "3/8")||(str === "5/8")||(str === "7/8")){
+        return true
+      }else return false;
+}
+function isMeasure(str){
+  if((str === "tablespoon")||(str === "Tablespoon")||(str === "teaspoon")||
+      (str === "Teaspoon")||(str === "T")||(str === "t")||
+      (str === "Tbsp")||(str === "Tsp")||(str === "Cups")||
+      (str === "Cup")||(str === "cups")||(str === "cup")||
+      (str === "Pints")||(str === "Pint")||(str === "pints")||
+      (str === "pint")||(str === "Ounce")||(str === "ounce")||
+      (str === "Dash")||(str === "dash")||(str === "Dashes")||
+      (str === "dashes")||(str === "Pinch")||(str === "pinch")||
+      (str === "Pinches")||(str === "pinches")||(str === "oz")||
+      (str === "Oz")||(str === "pt")||(str === "Pt")||
+      (str === "lb")||(str === "Lb")||(str === "Pound")||
+      (str === "pound")||(str === "Pounds")||(str === "pounds")||
+      (str === "#")){
+        return true
+      }else return false;
 }
 /*((list[i].substring(0,1) === "½")||(list[i].substring(0,1) === "⅓")||(list[i].substring(0,1) === "⅔")||
 (list[i].substring(0,1) === "¼")||(list[i].substring(0,1) === "¾")||(list[i].substring(0,1) === "⅛")||
@@ -137,9 +158,7 @@ function vulgarFrac(str){
       <table style ="width:100%">
         <tr>
           <th>Item Name</th>
-          <th>Number</th>
-          <th>Unit Cost</th>
-          <th>Total Cost</th>
+          <th>Walmart Link</th>
         </tr>
           <span id="Table">
 
