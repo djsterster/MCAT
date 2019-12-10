@@ -37,31 +37,33 @@ textarea {
       }
     }
     while(rawText)
+    console.log("Beep Beep Boop Boop why broken?");
     for (i=0; i<list.length; i++){
-      if(list[i] == '\n' || !(list[i])) list.splice(i, 1);
+      if(!isNaN(list[i].substring(0, list[i].indexOf(" ")))){
+        list[i] = list[i].substring(list[i].indexOf(" ") + 1);
+      }
+      if(list[i].indexOf("/") != -1){
+        if(!isNaN(list[i].substring(0,list[i].indexOf("/")))){
+          list[i] = list[i].substring(list[i].indexOf(" ") + 1);
+        }
+      }
+      if(list[i].indexOf("-") != -1){
+        if(!isNaN(list[i].substring(0,list[i].indexOf("-")))){
+          list[i] = list[i].substring(list[i].indexOf(" ") + 1);
+        }
+      }
+      if(isFrac(list[i].substring(0, list[i].indexOf(" ")))){
+        list[i] = list[i].substring(list[i].indexOf(" ") + 1);
+      }
+      if(isMeasure(list[i].substring(0, list[i].indexOf(" ")))){
+        list[i] = list[i].substring(list[i].indexOf(" ") + 1);
+      }
+      if(list[i] == '\n' || !(list[i])){
+         list.splice(i, 1);
+         i--
+      }
     }
     console.log("Done with the name calculations");
-    for(v=0; v<list.length, v++;){
-      if(!isNan(list[v].substring(0, list[v].indexOf(" ")))){
-        list[v] = list[v].substring(list[v].indexOf(" ") + 1);
-      }
-      if(list[v].indexOf("/") != -1){
-        if(!isNan(list[v].substring(0,list[v].indexOf("/")))){
-          list[v] = list[v].substring(list[v].indexOf(" ") + 1);
-        }
-      }
-      if(list[v].indexOf("-") != -1){
-        if(!isNan(list[v].substring(0,list[v].indexOf("-")))){
-          list[v] = list[v].substring(list[v].indexOf(" ") + 1);
-        }
-      }
-      if(isFrac(list[v].substring(0, list[v].indexOf(" ")))){
-        list[v] = list[v].substring(list[v].indexOf(" ") + 1);
-      }
-      if(isMeasure(list[v].substring(0, list[v].indexOf(" ")))){
-        list[v] = list[v].substring(list[v].indexOf(" ") + 1);
-      }
-    }
     console.log("List better be good now or I swear to JESUS CHRIST")
 console.log("Stop Point");
 }
@@ -139,9 +141,6 @@ function isMeasure(str){
       <h1>MCAT</h1>
     </div>
     <div class="w3-padding-64">
-        <input type="number" id="zipCode" placeholder="Zip Code" width="30">
-        <p> </p>
-        <br>
         <textarea id="textBox" rows="4" cols="30" placeholder="Ingredient List separated by new lines"></textarea>
         <p> </p>
         <br>
@@ -152,16 +151,15 @@ function isMeasure(str){
   </div>
   <div class="w3-half w3-blue-grey w3-container" style="height:700px">
     <div class="w3-padding-64 w3-center">
-      <h1>Your Recipe Price</h1>
+      <h1>Find Your Prices</h1>
     </div>
     <div>
       <table style ="width:100%">
         <tr>
           <th>Item Name</th>
-          <th>Walmart Link</th>
         </tr>
           <span id="Table">
-
+          
           </span>
         </table>
     </div>
