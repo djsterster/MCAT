@@ -17,8 +17,9 @@ textarea {
   var CostList = [];
   var NumList = [];
   var zipCode = 0;
+  var tableData = "";
   $(function(){
-   $("#form").submit(calc);
+   $("#Button").click(calc);
   })
 
   function calc(){
@@ -61,11 +62,13 @@ textarea {
       if(list[i] == '\n' || !(list[i])){
          list.splice(i, 1);
          i--
+         continue;
       }
+      tableData = tableData + ("<a target=\"_blank\"href=\"https://grocery.walmart.com/search/?query=" + list[i] + "\">" + list[i] + "</a><br>");
     }
-    console.log("Done with the name calculations");
-    console.log("List better be good now or I swear to JESUS CHRIST")
-console.log("Stop Point");
+    console.log("Test Point");
+    $("#Table").html(tableData);
+    console.log("Test Point");
 }
 function vulgarFrac(str){
   console.log("Here Lies Testing vulgar Method");
@@ -141,27 +144,19 @@ function isMeasure(str){
       <h1>MCAT</h1>
     </div>
     <div class="w3-padding-64">
+
         <textarea id="textBox" rows="4" cols="30" placeholder="Ingredient List separated by new lines"></textarea>
         <p> </p>
         <br>
-        <form id="form">
-          <button type="submit">Submit</button>
-        </form>
+          <button id="Button">Enter</button>
     </div>
   </div>
   <div class="w3-half w3-blue-grey w3-container" style="height:700px">
     <div class="w3-padding-64 w3-center">
-      <h1>Find Your Prices</h1>
+      <h1>Find Your Recipe Price</h1>
     </div>
     <div>
-      <table style ="width:100%">
-        <tr>
-          <th>Item Name</th>
-        </tr>
-          <span id="Table">
-          
-          </span>
-        </table>
+      <span id="Table"></span>
     </div>
     <p id="Output"><span id="Cost">X</span></p>
   </div>
