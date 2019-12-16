@@ -18,7 +18,7 @@ textarea {
   var numList = [];
   var zipCode = 0;
   var costTotal = 0;
-  var tableData = "<table class=\"Cost_Table\"><tr><th>Ingredient</th><th>Unit Size</th><th>Unit Cost</th></tr>"
+  var tableData = "<table class=\"Cost_Table\"><tr><th>Ingredient</th><th>Unit Size</th><th>Unit Cost ($)</th></tr>"
   $(function(){
    $("#Button").click(calc);
   });
@@ -62,7 +62,7 @@ textarea {
       }
       if(isFrac(list[i].substring(0, list[i].indexOf(" ")))){
         numList[i] = numList[i] + list[i].substring(0, list[i].indexOf(" "));
-        costList[i] = costList[i] + list[i].substring(0, list[i].indexOf(" "));
+        costList[i] = costList[i] + vulgarFrac(list[i].substring(0, list[i].indexOf(" ")));
         list[i] = list[i].substring(list[i].indexOf(" ") + 1);
       }
       if(isMeasure(list[i].substring(0, list[i].indexOf(" ")))){
@@ -124,11 +124,11 @@ function isMeasure(str){
 }
 function total(){
   $("input").each(function(index){
-    if(!isNaN($(this).val))(
+    if(!($(this).val() === ("")))(
       costTotal = costTotal + (costList[index] * $(this).val())
     )
   });
-  $("#totalCost").html(costTotal);
+  $("#totalCost").html(" $" + (costTotal - (costTotal % .01)));
 }
 
 /*((list[i].substring(0,1) === "½")||(list[i].substring(0,1) === "⅓")||(list[i].substring(0,1) === "⅔")||
