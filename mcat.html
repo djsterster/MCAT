@@ -7,20 +7,21 @@
 textarea {
   overflow: auto;
 }
-#Output {
+#Cost_Table {
   display: none;
 }
 </style>
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 <script>
   var list = [];
-  var CostList = [];
-  var NumList = [];
+  var costList = [];
+  var numList = [];
   var zipCode = 0;
-  var tableData = "";
+  var costTotal = 0;
+  var tableData = "<table class=\"Cost_Table\"><tr><th>Ingredient</th><th>Unit Size</th><th>Unit Cost</th></tr>"
   $(function(){
    $("#Button").click(calc);
-  })
+  });
 
   function calc(){
     console.log("Function called");
@@ -41,22 +42,31 @@ textarea {
     console.log("Beep Beep Boop Boop why broken?");
     for (i=0; i<list.length; i++){
       if(!isNaN(list[i].substring(0, list[i].indexOf(" ")))){
+        numList[i] = list[i].substring(0, list[i].indexOf(" "));
+        costList[i] = list[i].substring(0, list[i].indexOf(" "));
         list[i] = list[i].substring(list[i].indexOf(" ") + 1);
       }
       if(list[i].indexOf("/") != -1){
         if(!isNaN(list[i].substring(0,list[i].indexOf("/")))){
+          numList[i] = numList[i] + list[i].substring(0, list[i].indexOf(" "));
+          costList[i] = costList[i] + list[i].substring(0, list[i].indexOf(" "));
           list[i] = list[i].substring(list[i].indexOf(" ") + 1);
         }
       }
       if(list[i].indexOf("-") != -1){
         if(!isNaN(list[i].substring(0,list[i].indexOf("-")))){
+          numList[i] = numList[i] + list[i].substring(0, list[i].indexOf(" "));
+          costList[i] = list[i].substring(0, list[i].indexOf("-"));
           list[i] = list[i].substring(list[i].indexOf(" ") + 1);
         }
       }
       if(isFrac(list[i].substring(0, list[i].indexOf(" ")))){
+        numList[i] = numList[i] + list[i].substring(0, list[i].indexOf(" "));
+        costList[i] = costList[i] + list[i].substring(0, list[i].indexOf(" "));
         list[i] = list[i].substring(list[i].indexOf(" ") + 1);
       }
       if(isMeasure(list[i].substring(0, list[i].indexOf(" ")))){
+        numList[i] = numList[i] + list[i].substring(0, list[i].indexOf(" "));
         list[i] = list[i].substring(list[i].indexOf(" ") + 1);
       }
       if(list[i] == '\n' || !(list[i])){
@@ -64,11 +74,13 @@ textarea {
          i--
          continue;
       }
-      tableData = tableData + ("<a target=\"_blank\"href=\"https://grocery.walmart.com/search/?query=" + list[i] + "\">" + list[i] + "</a><br>");
+      tableData = tableData + ("<td><a target=\"_blank\"href=\"https://grocery.walmart.com/search/?query=" + list[i] + "\">" + list[i] + "</a><br></td><td>" + numList[i] + "</td><td><input class=\"unitCost\"></input></td></tr>");
     }
     console.log("Test Point");
+    tableData = tableData + ("</table><br><button id=\"tableButton\">Calculate</button><br><p>Total Cost =<span id=\"totalCost\"></span></p>")
     $("#Table").html(tableData);
     console.log("Test Point");
+    $("#tableButton").click(total);
 }
 function vulgarFrac(str){
   console.log("Here Lies Testing vulgar Method");
@@ -110,6 +122,15 @@ function isMeasure(str){
         return true
       }else return false;
 }
+function total(){
+  $("input").each(function(index){
+    if(!isNaN($(this).val))(
+      costTotal = costTotal + (costList[index] * $(this).val())
+    )
+  });
+  $("#totalCost").html(costTotal);
+}
+
 /*((list[i].substring(0,1) === "½")||(list[i].substring(0,1) === "⅓")||(list[i].substring(0,1) === "⅔")||
 (list[i].substring(0,1) === "¼")||(list[i].substring(0,1) === "¾")||(list[i].substring(0,1) === "⅛")||
 (list[i].substring(0,1) === "⅜")||(list[i].substring(0,1) === "⅝")||(list[i].substring(0,1) === "⅞"))*/
@@ -158,7 +179,6 @@ function isMeasure(str){
     <div>
       <span id="Table"></span>
     </div>
-    <p id="Output"><span id="Cost">X</span></p>
   </div>
 </div>
 
