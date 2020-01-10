@@ -7,19 +7,21 @@
 textarea {
   overflow: auto;
 }
-#Output {
+#Cost_Table {
   display: none;
 }
 </style>
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 <script>
   var list = [];
-  var CostList = [];
-  var NumList = [];
+  var costList = [];
+  var numList = [];
   var zipCode = 0;
+  var costTotal = 0;
+  var tableData = "<table class=\"Cost_Table\"><tr><th>Ingredient</th><th>Unit Size</th><th>Unit Cost ($)</th></tr>"
   $(function(){
-   $("#form").submit(calc);
-  })
+   $("#Button").click(calc);
+  });
 
   function calc(){
     console.log("Function called");
@@ -37,39 +39,48 @@ textarea {
       }
     }
     while(rawText)
+    console.log("Beep Beep Boop Boop why broken?");
     for (i=0; i<list.length; i++){
-      if(list[i] == '\n' || isNaN(list[i].substring(0,list[i].indexOf(" ")))) list.splice(i, 1);
-    }
-    console.log("Done with the name calculations");
-    var fractionNumberBit = "";
-    for(i=0; i<list.length, i++;){
-      firstBit = list[i].substring(0,list[i].indexOf(" "));
-      fractionNumberBit = list[i].substring(list[i].indexOf(" ")+1, list[i].substring(list[i].indexOf(" ")+1).indexOf(" "));
-      
-      if(((firstBit === "½")||(firstBit === "⅓")||(firstBit === "⅔")||
-      (firstBit === "¼")||(firstBit === "¾")||(firstBit === "⅛")||
-      (firstBit === "⅜")||(firstBit === "⅝")||(firstBit === "⅞")||
-      (firstBit === "1/2")||(firstBit === "1/3")||(firstBit === "2/3")||
-      (firstBit === "1/4")||(firstBit === "3/4")||(firstBit === "1/8")||
-      (firstBit === "3/8")||(firstBit === "5/8")||(firstBit === "7/8"))){
-        numList[i] = vulgarFrac(list[i].substring(0,list[i].indexOf(" ")));
-        console.log("Here Lies Testing first IF");
-      }else numList[i] = list[i].substring(0, list[i].indexOf(" "));
-
-      list[i] = list[i].substring(list[i].indexOf(" ")+1);
-      if(((fractionNumberBit === "½")||(fractionNumberBit === "⅓")||(fractionNumberBit === "⅔")||
-      (fractionNumberBit === "¼")||(fractionNumberBit === "¾")||(fractionNumberBit === "⅛")||
-      (fractionNumberBit === "⅜")||(fractionNumberBit === "⅝")||(fractionNumberBit === "⅞")||
-      (fractionNumberBit === "1/2")||(fractionNumberBit === "1/3")||(fractionNumberBit === "2/3")||
-      (fractionNumberBit === "1/4")||(fractionNumberBit === "3/4")||(fractionNumberBit === "1/8")||
-      (fractionNumberBit === "3/8")||(fractionNumberBit === "5/8")||(fractionNumberBit === "7/8"))){
-        numList[i] = numList[i] + vulgarFrac(fractionNumberBit);
-        list[i] = list[i].substring(list[i].indexOf(" ")+1);
-        console.log("Here Lies Testing second IF");
+      if(!isNaN(list[i].substring(0, list[i].indexOf(" ")))){
+        numList[i] = list[i].substring(0, list[i].indexOf(" "));
+        costList[i] = list[i].substring(0, list[i].indexOf(" "));
+        list[i] = list[i].substring(list[i].indexOf(" ") + 1);
       }
-  console.log("Here Lies Testing");
-  console.log("Stop Point");
-  }
+      if(list[i].indexOf("/") != -1){
+        if(!isNaN(list[i].substring(0,list[i].indexOf("/")))){
+          numList[i] = numList[i] + list[i].substring(0, list[i].indexOf(" "));
+          costList[i] = costList[i] + list[i].substring(0, list[i].indexOf(" "));
+          list[i] = list[i].substring(list[i].indexOf(" ") + 1);
+        }
+      }
+      if(list[i].indexOf("-") != -1){
+        if(!isNaN(list[i].substring(0,list[i].indexOf("-")))){
+          numList[i] = numList[i] + list[i].substring(0, list[i].indexOf(" "));
+          costList[i] = list[i].substring(0, list[i].indexOf("-"));
+          list[i] = list[i].substring(list[i].indexOf(" ") + 1);
+        }
+      }
+      if(isFrac(list[i].substring(0, list[i].indexOf(" ")))){
+        numList[i] = numList[i] + list[i].substring(0, list[i].indexOf(" "));
+        costList[i] = costList[i] + vulgarFrac(list[i].substring(0, list[i].indexOf(" ")));
+        list[i] = list[i].substring(list[i].indexOf(" ") + 1);
+      }
+      if(isMeasure(list[i].substring(0, list[i].indexOf(" ")))){
+        numList[i] = numList[i] + list[i].substring(0, list[i].indexOf(" "));
+        list[i] = list[i].substring(list[i].indexOf(" ") + 1);
+      }
+      if(list[i] == '\n' || !(list[i])){
+         list.splice(i, 1);
+         i--
+         continue;
+      }
+      tableData = tableData + ("<td><a target=\"_blank\"href=\"https://grocery.walmart.com/search/?query=" + list[i] + "\">" + list[i] + "</a><br></td><td>" + numList[i] + "</td><td><input class=\"unitCost\"></input></td></tr>");
+    }
+    console.log("Test Point");
+    tableData = tableData + ("</table><br><button id=\"tableButton\">Calculate</button><br><p>Total Cost =<span id=\"totalCost\"></span></p>")
+    $("#Table").html(tableData);
+    console.log("Test Point");
+    $("#tableButton").click(total);
 }
 function vulgarFrac(str){
   console.log("Here Lies Testing vulgar Method");
@@ -84,6 +95,42 @@ function vulgarFrac(str){
     else if(str === "⅞"){return(7/8)
   }else return;
 }
+function isFrac(str){
+  if((str === "½")||(str === "⅓")||(str === "⅔")||
+      (str === "¼")||(str === "¾")||(str === "⅛")||
+      (str === "⅜")||(str === "⅝")||(str === "⅞")||
+      (str === "1/2")||(str === "1/3")||(str === "2/3")||
+      (str === "1/4")||(str === "3/4")||(str === "1/8")||
+      (str === "3/8")||(str === "5/8")||(str === "7/8")){
+        return true
+      }else return false;
+}
+function isMeasure(str){
+  if((str === "tablespoon")||(str === "Tablespoon")||(str === "teaspoon")||
+      (str === "Teaspoon")||(str === "T")||(str === "t")||
+      (str === "Tbsp")||(str === "Tsp")||(str === "Cups")||
+      (str === "Cup")||(str === "cups")||(str === "cup")||
+      (str === "Pints")||(str === "Pint")||(str === "pints")||
+      (str === "pint")||(str === "Ounce")||(str === "ounce")||
+      (str === "Dash")||(str === "dash")||(str === "Dashes")||
+      (str === "dashes")||(str === "Pinch")||(str === "pinch")||
+      (str === "Pinches")||(str === "pinches")||(str === "oz")||
+      (str === "Oz")||(str === "pt")||(str === "Pt")||
+      (str === "lb")||(str === "Lb")||(str === "Pound")||
+      (str === "pound")||(str === "Pounds")||(str === "pounds")||
+      (str === "#")){
+        return true
+      }else return false;
+}
+function total(){
+  $("input").each(function(index){
+    if(!($(this).val() === ("")))(
+      costTotal = costTotal + (costList[index] * $(this).val())
+    )
+  });
+  $("#totalCost").html(" $" + (costTotal - (costTotal % .01)));
+}
+
 /*((list[i].substring(0,1) === "½")||(list[i].substring(0,1) === "⅓")||(list[i].substring(0,1) === "⅔")||
 (list[i].substring(0,1) === "¼")||(list[i].substring(0,1) === "¾")||(list[i].substring(0,1) === "⅛")||
 (list[i].substring(0,1) === "⅜")||(list[i].substring(0,1) === "⅝")||(list[i].substring(0,1) === "⅞"))*/
@@ -91,23 +138,14 @@ function vulgarFrac(str){
 
 /* Here's the example recipe list
 1 large dried ancho chile
-
 2-3 Tbsp cumin seeds
-
 1 small onion
-
 1 jalapeno
-
 ½ green bell pepper
-
 ½ red bell pepper
-
 1 clove garlic
-
 1-2 Tbsp vegetable oil
-
 1 chipotle in adobo sauce (from can) 
-
 14 ounce can fire roasted crushed tomatoes*/
 </script>
 <body class="w3-content" style="max-width:1300px">
@@ -118,35 +156,20 @@ function vulgarFrac(str){
       <h1>MCAT</h1>
     </div>
     <div class="w3-padding-64">
-        <input type="number" id="zipCode" placeholder="Zip Code" width="30">
-        <p> </p>
-        <br>
+
         <textarea id="textBox" rows="4" cols="30" placeholder="Ingredient List separated by new lines"></textarea>
         <p> </p>
         <br>
-        <form id="form">
-          <button type="submit">Submit</button>
-        </form>
+          <button id="Button">Enter</button>
     </div>
   </div>
   <div class="w3-half w3-blue-grey w3-container" style="height:700px">
     <div class="w3-padding-64 w3-center">
-      <h1>Your Recipe Price</h1>
+      <h1>Find Your Recipe Price</h1>
     </div>
     <div>
-      <table style ="width:100%">
-        <tr>
-          <th>Item Name</th>
-          <th>Number</th>
-          <th>Unit Cost</th>
-          <th>Total Cost</th>
-        </tr>
-          <span id="Table">
-
-          </span>
-        </table>
+      <span id="Table"></span>
     </div>
-    <p id="Output"><span id="Cost">X</span></p>
   </div>
 </div>
 
