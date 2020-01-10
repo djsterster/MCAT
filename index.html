@@ -1,1 +1,188 @@
-<h1>Hello World!</h1>
+
+<!DOCTYPE html>
+<html>
+<title>MCAT</title>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<style>
+textarea {
+  overflow: auto;
+}
+#Cost_Table {
+  display: none;
+}
+</style>
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+<script>
+  var list = [];
+  var costList = [];
+  var numList = [];
+  var zipCode = 0;
+  var costTotal = 0;
+  var tableData = "<table class=\"Cost_Table\"><tr><th>Ingredient</th><th>Unit Size</th><th>Unit Cost ($)</th></tr>"
+  $(function(){
+   $("#Button").click(calc);
+  });
+
+  function calc(){
+    console.log("Function called");
+    var test = "Yep, I'm a test";
+    zipCode = Number($("#zipCode").val());
+    $("#zipCode").html("");
+    var rawText = String($("#textBox").val());
+    $("#textBox").html("Just a moment while your cost is calculated!");
+    do{
+      list[list.length] = rawText.substring(0, rawText.indexOf("\n"));
+      rawText = rawText.substring(rawText.indexOf('\n')+1);
+      if(rawText.indexOf('\n')==-1){
+        list[list.length] = rawText;
+        rawText = '';
+      }
+    }
+    while(rawText)
+    console.log("Beep Beep Boop Boop why broken?");
+    for (i=0; i<list.length; i++){
+      if(!isNaN(list[i].substring(0, list[i].indexOf(" ")))){
+        numList[i] = list[i].substring(0, list[i].indexOf(" "));
+        costList[i] = list[i].substring(0, list[i].indexOf(" "));
+        list[i] = list[i].substring(list[i].indexOf(" ") + 1);
+      }
+      if(list[i].indexOf("/") != -1){
+        if(!isNaN(list[i].substring(0,list[i].indexOf("/")))){
+          numList[i] = numList[i] + list[i].substring(0, list[i].indexOf(" "));
+          costList[i] = costList[i] + list[i].substring(0, list[i].indexOf(" "));
+          list[i] = list[i].substring(list[i].indexOf(" ") + 1);
+        }
+      }
+      if(list[i].indexOf("-") != -1){
+        if(!isNaN(list[i].substring(0,list[i].indexOf("-")))){
+          numList[i] = numList[i] + list[i].substring(0, list[i].indexOf(" "));
+          costList[i] = list[i].substring(0, list[i].indexOf("-"));
+          list[i] = list[i].substring(list[i].indexOf(" ") + 1);
+        }
+      }
+      if(isFrac(list[i].substring(0, list[i].indexOf(" ")))){
+        numList[i] = numList[i] + list[i].substring(0, list[i].indexOf(" "));
+        costList[i] = costList[i] + vulgarFrac(list[i].substring(0, list[i].indexOf(" ")));
+        list[i] = list[i].substring(list[i].indexOf(" ") + 1);
+      }
+      if(isMeasure(list[i].substring(0, list[i].indexOf(" ")))){
+        numList[i] = numList[i] + list[i].substring(0, list[i].indexOf(" "));
+        list[i] = list[i].substring(list[i].indexOf(" ") + 1);
+      }
+      if(list[i] == '\n' || !(list[i])){
+         list.splice(i, 1);
+         i--
+         continue;
+      }
+      tableData = tableData + ("<td><a target=\"_blank\"href=\"https://grocery.walmart.com/search/?query=" + list[i] + "\">" + list[i] + "</a><br></td><td>" + numList[i] + "</td><td><input class=\"unitCost\"></input></td></tr>");
+    }
+    console.log("Test Point");
+    tableData = tableData + ("</table><br><button id=\"tableButton\">Calculate</button><br><p>Total Cost =<span id=\"totalCost\"></span></p>")
+    $("#Table").html(tableData);
+    console.log("Test Point");
+    $("#tableButton").click(total);
+}
+function vulgarFrac(str){
+  console.log("Here Lies Testing vulgar Method");
+  if(str === "½"){return(1/2)}
+    else if(str === "⅓"){return(1/3)}
+    else if(str === "⅔"){return(2/3)}
+    else if(str === "¼"){return(1/4)}
+    else if(str === "¾"){return(3/4)}
+    else if(str === "⅛"){return(1/8)}
+    else if(str === "⅜"){return(3/8)}
+    else if(str === "⅝"){return(5/8)}
+    else if(str === "⅞"){return(7/8)
+  }else return;
+}
+function isFrac(str){
+  if((str === "½")||(str === "⅓")||(str === "⅔")||
+      (str === "¼")||(str === "¾")||(str === "⅛")||
+      (str === "⅜")||(str === "⅝")||(str === "⅞")||
+      (str === "1/2")||(str === "1/3")||(str === "2/3")||
+      (str === "1/4")||(str === "3/4")||(str === "1/8")||
+      (str === "3/8")||(str === "5/8")||(str === "7/8")){
+        return true
+      }else return false;
+}
+function isMeasure(str){
+  if((str === "tablespoon")||(str === "Tablespoon")||(str === "teaspoon")||
+      (str === "Teaspoon")||(str === "T")||(str === "t")||
+      (str === "Tbsp")||(str === "Tsp")||(str === "Cups")||
+      (str === "Cup")||(str === "cups")||(str === "cup")||
+      (str === "Pints")||(str === "Pint")||(str === "pints")||
+      (str === "pint")||(str === "Ounce")||(str === "ounce")||
+      (str === "Dash")||(str === "dash")||(str === "Dashes")||
+      (str === "dashes")||(str === "Pinch")||(str === "pinch")||
+      (str === "Pinches")||(str === "pinches")||(str === "oz")||
+      (str === "Oz")||(str === "pt")||(str === "Pt")||
+      (str === "lb")||(str === "Lb")||(str === "Pound")||
+      (str === "pound")||(str === "Pounds")||(str === "pounds")||
+      (str === "#")){
+        return true
+      }else return false;
+}
+function total(){
+  $("input").each(function(index){
+    if(!($(this).val() === ("")))(
+      costTotal = costTotal + (costList[index] * $(this).val())
+    )
+  });
+  $("#totalCost").html(" $" + (costTotal - (costTotal % .01)));
+}
+
+/*((list[i].substring(0,1) === "½")||(list[i].substring(0,1) === "⅓")||(list[i].substring(0,1) === "⅔")||
+(list[i].substring(0,1) === "¼")||(list[i].substring(0,1) === "¾")||(list[i].substring(0,1) === "⅛")||
+(list[i].substring(0,1) === "⅜")||(list[i].substring(0,1) === "⅝")||(list[i].substring(0,1) === "⅞"))*/
+
+
+/* Here's the example recipe list
+1 large dried ancho chile
+
+2-3 Tbsp cumin seeds
+
+1 small onion
+
+1 jalapeno
+
+½ green bell pepper
+
+½ red bell pepper
+
+1 clove garlic
+
+1-2 Tbsp vegetable oil
+
+1 chipotle in adobo sauce (from can) 
+
+14 ounce can fire roasted crushed tomatoes*/
+</script>
+<body class="w3-content" style="max-width:1300px">
+
+<div class="w3-row">
+  <div class="w3-half w3-black w3-container w3-center" style="height:700px">
+    <div class="w3-padding-64">
+      <h1>MCAT</h1>
+    </div>
+    <div class="w3-padding-64">
+
+        <textarea id="textBox" rows="4" cols="30" placeholder="Ingredient List separated by new lines"></textarea>
+        <p> </p>
+        <br>
+          <button id="Button">Enter</button>
+    </div>
+  </div>
+  <div class="w3-half w3-blue-grey w3-container" style="height:700px">
+    <div class="w3-padding-64 w3-center">
+      <h1>Find Your Recipe Price</h1>
+    </div>
+    <div>
+      <span id="Table"></span>
+    </div>
+  </div>
+</div>
+
+
+</body>
+</html>
